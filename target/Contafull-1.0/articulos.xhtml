@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/template.xhtml">
+
+
+            <ui:define name="content">
+                <p:growl id="msgs" showDetail="true" />  
+                <h:form>  
+                    <p:commandButton id="btnUsuarioCreate" oncomplete="dialogCategoriaCreate.show()" icon="ui-icon-document" title="Nuevo" value="Nuevo"/>
+                    <!--  <p:commandButton icon="ui-icon-close" action="inicio1.xhtml" title="Salir" value="Salir"/>-->
+                </h:form>
+                <h:form id="formdatatable"> 
+                    <p:dataTable id="listusuario" value="#{articuloControlador.lisarticulos}" var="articulo"  rows="3" paginator="true">          
+                        <p:column>
+                            <f:facet name="header" >
+                                <h:outputText value="Nombre"/>
+                            </f:facet>    
+                            <h:outputText value="#{articulo.nombre}" />
+                        </p:column>
+                        <p:column >
+                            <f:facet name="header" >
+                                <h:outputText value="Valor Unitario"/>
+                            </f:facet>    
+                            <h:outputText value="#{articulo.valorUnit}" />
+                        </p:column>
+
+
+                        <p:column>
+                            <f:facet name="header" >
+                                <h:outputText value="Estado"/>
+                            </f:facet>    
+                            <h:outputText value="#{articulo.estado}" />
+                        </p:column>
+
+
+                        <p:column headerText="Metodos" style="width:10%">  
+
+                            <p:commandButton oncomplete="dialogUsuarioModify.show()" icon="ui-icon-pencil" title="Modificar" actionListener="#{articuloControlador.seleccionarr}" update=":formModify" >  
+                                <f:attribute name="tipo" value="#{articulo}"/>
+                            </p:commandButton>
+                            <p:commandButton ajax="false" icon="ui-icon-close" title="Eliminar" action="#{articuloControlador.eliminar()}" update="formCreate">
+                                <f:setPropertyActionListener target="#{articuloControlador.articulos}" value="#{articulo}" />
+                            </p:commandButton>
+
+                        </p:column>
+                    </p:dataTable> 
+                </h:form> 
+
+
+
+                <h:form id="formCreate">
+                    <p:dialog header="Crear Articulo" widgetVar="dialogCategoriaCreate" resizable="false" id="dlgCategoriaCreate"  
+                              showEffect="fade" hideEffect="explode" modal="true"> 
+                        <p:messages id="messages" />
+                        <h:panelGrid id="rgcategoria">
+                            <p:panel  style="width:330px;height:180px">
+                                <h:panelGrid columns="2">  
+                                    <h:outputLabel value="Nombre: " for="txtnombre1"/>
+                                    <p:inputText label="nomcatg" id="txtnombre1" value="#{articuloControlador.articulos.nombre}" size="20"/>
+                                    <h:outputLabel value="Valor Unitario: " for="txtapellido1"/>
+                                    <p:inputText label="Descripcioncatg" id="txtapellido1" value="#{articuloControlador.articulos.valorUnit}" size="20"/>
+                                    <h:outputLabel value="Estado: " for="txtcorreo1"/>
+                                    <p:inputText label="Estadocatg" id="txtcorreo1" value="#{articuloControlador.articulos.estado}" size="20"/>
+
+                                   <!-- <h:outputLabel value="Categoria" />
+                                    <p:selectOneMenu value="#{articuloControlador.articulos.categoria}" required="true"
+                                                     requiredMessage="categoria es obligatorio!">
+                                        <f:selectItem itemLabel="[Seleccione]" noSelectionOption="true" />
+                                        <f:selectItems value="#{articuloControlador.liscatarticulo}" var="cat" 
+                                                       itemLabel="#{cat.nombre}" itemValue="#{cat.id}"/>
+                                    </p:selectOneMenu>-->
+
+
+                                </h:panelGrid>
+                                <p:column style="width:6%">                                
+                                    <p:commandButton id="btnguardausuariosss"  value="Guardar" actionListener="#{articuloControlador.guardarDatos()}"    
+                                                     icon="ui-icon-disk" update=":formdatatable rgcategoria"/>
+                                    <p:commandButton type="reset" value="Cancelar" icon="ui-icon-arrowreturnthick-1-e"  />
+                                    <p:commandButton value="Cerrar" icon="ui-icon-close" oncomplete="dialogCategoriaCreate.hide()" />
+                                </p:column>  
+
+                            </p:panel> 
+                        </h:panelGrid>
+                    </p:dialog> 
+                </h:form>
+
+
+                <h:form id="formModify">
+                    <p:dialog header="Modificar Usuario" widgetVar="dialogUsuarioModify" resizable="false"   
+                              showEffect="fade" hideEffect="explode" modal="true">  
+                        <h:panelGrid id="rginsumosM">
+                            <p:panel header="Informacion de Modificadion Usuario" style="width:330px;height:180px">
+                                <h:panelGrid columns="2">  
+                                    <h:outputLabel value="Nombre: " for="txtnombre1"/>
+                                    <p:outputLabel  id="txtnombre1" value="#{articuloControlador.articulos.nombre}" />
+                                    <h:outputLabel value="Valor Unitario: " for="txtapellido1"/>
+                                    <p:inputText label="Descripcioncatg" id="txtapellido1" value="#{articuloControlador.articulos.valorUnit}" size="20"/>
+                                    <h:outputLabel value="Estado: " for="txtcorreo1"/>
+                                    <p:inputText label="Estadocatg" id="txtcorreo1" value="#{articuloControlador.articulos.estado}" size="20"/>
+
+                                   <!-- <h:outputLabel value="Categoria" />
+                                    <p:selectOneMenu value="#{articuloControlador.articulos.categoria.id}" required="true"
+                                                     requiredMessage="categoria es obligatorio!">
+                                        <f:selectItem itemLabel="[Seleccione]" noSelectionOption="true" />
+                                        <f:selectItems value="#{articuloControlador.liscatarticulo}" var="cat" 
+                                                       itemLabel="#{cat.nombre}" itemValue="#{cat.id}"/>
+                                    </p:selectOneMenu>-->
+
+
+
+                                </h:panelGrid>
+                                <p:column style="width:6%">                                
+                                    <p:commandButton id="btnguardarusuarioo" value="#{articulo}" actionListener="#{articuloControlador.guardarDatos()}"    
+                                                     icon="ui-icon-disk" update=":formdatatable formModify"/>
+                                </p:column>  
+
+                            </p:panel>                             
+                        </h:panelGrid>
+                    </p:dialog> 
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
